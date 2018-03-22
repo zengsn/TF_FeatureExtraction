@@ -70,6 +70,28 @@ example_feat_extract.py
 --layer_names Logits
 ```
 
+**Inception-ResNet-v2**
+```  
+example_feat_extract.py \\
+--network inception_resnet_v2  \\
+--checkpoint ../../checkpoints/inception_resnet_v2_2016_08_30.ckpt \\
+--image_path ../../data/FashionMNIST_28x28/ \\
+--out_file ../../data/FashionMNIST_28x28.inception_resnet_v2.h5 \\
+--num_classes 1001 \\
+--preproc_func inception \\
+--layer_names Logits \\   
+```   
+
+**VGG-16**
+```  
+example_feat_extract.py \\
+--network vgg_16  \\
+--checkpoint ../../checkpoints/vgg_16.ckpt \\
+--image_path ../../data/FashionMNIST_28x28/ \\
+--out_file ../../data/FashionMNIST_28x28.vgg_16.h5 \\
+--num_classes 1000 \\
+--layer_names vgg_16/fc6 \\
+
 ### Image Classification
 
 ```
