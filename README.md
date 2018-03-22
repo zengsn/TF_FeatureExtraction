@@ -90,7 +90,8 @@ example_feat_extract.py \\
 --image_path ../../data/FashionMNIST_28x28/ \\
 --out_file ../../data/FashionMNIST_28x28.vgg_16.h5 \\
 --num_classes 1000 \\
---layer_names vgg_16/fc6 \\
+--layer_names vgg_16/fc6 \\   
+```   
 
 ### Image Classification
 
