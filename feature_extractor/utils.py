@@ -41,6 +41,9 @@ def find_files(paths, extensions, sort=True):
         for file in os.listdir(path):
             if file.endswith(extensions):
                 files.append(os.path.join(path, file))
+            elif os.path.isdir(os.path.join(path, file)):
+                sub_files = find_files(os.path.join(path, file), extensions, sort)
+                files = files + sub_files
     if sort:
         files.sort()
     return files
