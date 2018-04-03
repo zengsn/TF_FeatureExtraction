@@ -45,7 +45,7 @@ def feature_extraction_queue(feature_extractor, image_path, layer_names,
     '''
 
     # Add a list of images to process, note that the list is ordered.
-    image_files = utils.find_files(image_path, ("jpg", "png"))
+    image_files = utils.find_files(image_path, ("jpg", "JPEG", "png"))
     num_images = min(len(image_files), num_images)
     image_files = image_files[0:num_images]
 
