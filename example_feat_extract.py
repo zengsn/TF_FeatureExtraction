@@ -16,6 +16,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
 import argparse
 import numpy as np
 import time
@@ -128,6 +129,7 @@ if __name__ == "__main__":
     parser.add_argument("--preproc_threads", dest="num_preproc_threads", type=int, default=2, help="number of preprocessing threads (2)")
     parser.add_argument("--batch_size", dest="batch_size", type=int, default=64, help="batch size (32)")
     parser.add_argument("--num_classes", dest="num_classes", type=int, default=1001, help="number of classes (1001)")
+    parser.add_argument("--class_by_class", dest="class_by_class", type=str, default=None, help="extract features class by class")
     args = parser.parse_args()
 
     # resnet_v2_101/logits,resnet_v2_101/pool4 => to list of layer names
@@ -144,16 +146,30 @@ if __name__ == "__main__":
     )
 
     # Print the network summary, use these layer names for feature extraction
-    #feature_extractor.print_network_summary()
+    feature_extractor.print_network_summary()
 
-    # Feature extraction example using a filename queue to feed images
-    feature_dataset = feature_extraction_queue(
-        feature_extractor, args.image_path, layer_names,
-        args.batch_size, args.num_classes)
+    # Support class by class feature extraction for large datasets
+    class_by_class = args.class_by_class;
 
-    # Write features to disk as HDF5 file
-    utils.write_hdf5(args.out_file, layer_names, feature_dataset)
-    print("Successfully written features to: {}".format(args.out_file))
+    if class_by_class == 'yes':
+        path = args.image_path;
+        for file in os.listdir(path):
+            if os.path.isdir(os.path.join(path, file)):
+                feature_dataset = feature_extraction_queue(
+                    feature_extractor, args.image_path, layer_names,
+                    args.batch_size, args.num_classes)
+                class_features_file = args.out_file+'.'+file
+                utils.write_hdf5(class_features_file, layer_names, feature_dataset)
+                print("Successfully written features to: {}".format(class_features_file))
+    else:
+        # Feature extraction example using a filename queue to feed images
+        feature_dataset = feature_extraction_queue(
+            feature_extractor, args.image_path, layer_names,
+            args.batch_size, args.num_classes)
+
+        # Write features to disk as HDF5 file
+        utils.write_hdf5(args.out_file, layer_names, feature_dataset)
+        print("Successfully written features to: {}".format(args.out_file))
 
     # Close the threads and close session.
     feature_extractor.close()
