@@ -93,6 +93,19 @@ example_feat_extract.py \
 --layer_names vgg_16/fc6 \  
 ```   
 
+### Feature Extraction class by class for large-scale datasets
+**ResNet-v1-101**
+```
+example_feat_extract.py 
+--network resnet_v1_101 
+--checkpoint ./checkpoints/resnet_v1_101.ckpt 
+--image_path ./imagenet/ 
+--out_file ./imagenet.resnet_v1_101.global_pool.h5
+--num_classes 1000 
+--layer_names global_pool
+--class_by_class yes
+```
+
 ### Image Classification
 
 ```
