@@ -152,13 +152,19 @@ if __name__ == "__main__":
     class_by_class = args.class_by_class;
 
     if class_by_class == 'yes':
-        path = args.image_path;
-        for file in os.listdir(path):
-            if os.path.isdir(os.path.join(path, file)):
+        in_path = args.image_path
+        out_file= args.out_file
+        for file in os.listdir(in_path):
+            # check if already extracted
+            class_features_file = out_file+'.'+file
+            if os.path.isfile(class_features_file):
+                print("Already extracted: {}".format(class_features_file))
+                continue
+            # extract features for one class
+            if os.path.isdir(os.path.join(in_path, file)):
                 feature_dataset = feature_extraction_queue(
-                    feature_extractor, args.image_path, layer_names,
-                    args.batch_size, args.num_classes)
-                class_features_file = args.out_file+'.'+file
+                    feature_extractor, in_path, layer_names,
+                    args.batch_size, args.num_classes)                
                 utils.write_hdf5(class_features_file, layer_names, feature_dataset)
                 print("Successfully written features to: {}".format(class_features_file))
     else:
