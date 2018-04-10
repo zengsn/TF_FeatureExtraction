@@ -47,12 +47,13 @@ def feature_extraction_queue(feature_extractor, image_path, layer_names,
 
     # Add a list of images to process, note that the list is ordered.
     image_files = utils.find_files(image_path, ("jpg", "JPEG", "png"))
+    num_images = min(len(image_files), num_images)
+    image_files = image_files[0:num_images]
+    # -- save filenames
     json_filename=image_path[:-1]+'.json'
     with open(json_filename, 'w') as json_file:
         json.dump(image_files, json_file)
         print('Save all filenames to {}'.format(image_files))
-    num_images = min(len(image_files), num_images)
-    image_files = image_files[0:num_images]
 
     num_examples = len(image_files)
     num_batches = int(np.ceil(num_examples/batch_size))
@@ -162,13 +163,25 @@ if __name__ == "__main__":
         for file in os.listdir(in_path):
             # check if already extracted
             class_features_file = out_file+'.'+file
+            class_path = os.path.join(in_path, file)
             if os.path.isfile(class_features_file):
                 print("Already extracted: {}".format(class_features_file))
+                # check if filenames saved
+                json_file = in_path + file + '.json'
+                if not os.path.isfile(json_file):
+                    image_files = utils.find_files(class_path, ("jpg", "JPEG", "png"))
+                    num_images = min(len(image_files), 100000)
+                    image_files = image_files[0:num_images]
+                    # -- save filenames
+                    json_filename=image_path[:-1]+'.json'
+                    with open(json_filename, 'w') as json_file:
+                        json.dump(image_files, json_file)
+                        print('Save all filenames to {}'.format(image_files))
                 continue
             # extract features for one class
-            if os.path.isdir(os.path.join(in_path, file)):
+            if os.path.isdir(class_path):
                 feature_dataset = feature_extraction_queue(
-                    feature_extractor, in_path, layer_names,
+                    feature_extractor, class_path, layer_names,
                     args.batch_size, args.num_classes)                
                 utils.write_hdf5(class_features_file, layer_names, feature_dataset)
                 print("Successfully written features to: {}".format(class_features_file))
