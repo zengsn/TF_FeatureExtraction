@@ -53,7 +53,7 @@ def feature_extraction_queue(feature_extractor, image_path, layer_names,
     json_filename=image_path[:-1]+'.json'
     with open(json_filename, 'w') as json_file:
         json.dump(image_files, json_file)
-        print('Save all filenames to {}'.format(image_files))
+        print('Save all filenames to {}'.format(json_filename))
 
     num_examples = len(image_files)
     num_batches = int(np.ceil(num_examples/batch_size))
@@ -176,7 +176,7 @@ if __name__ == "__main__":
                     json_filename=image_path[:-1]+'.json'
                     with open(json_filename, 'w') as json_file:
                         json.dump(image_files, json_file)
-                        print('Save all filenames to {}'.format(image_files))
+                        print('Save all filenames to {}'.format(json_filename))
                 continue
             # extract features for one class
             if os.path.isdir(class_path):
