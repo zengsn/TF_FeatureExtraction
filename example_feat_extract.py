@@ -167,13 +167,12 @@ if __name__ == "__main__":
             if os.path.isfile(class_features_file):
                 print("Already extracted: {}".format(class_features_file))
                 # check if filenames saved
-                json_file = in_path + file + '.json'
-                if not os.path.isfile(json_file):
+                json_filename = in_path + file + '.json'
+                if not os.path.isfile(json_filename):
                     image_files = utils.find_files(class_path, ("jpg", "JPEG", "png"))
                     num_images = min(len(image_files), 100000)
                     image_files = image_files[0:num_images]
                     # -- save filenames
-                    json_filename=image_path[:-1]+'.json'
                     with open(json_filename, 'w') as json_file:
                         json.dump(image_files, json_file)
                         print('Save all filenames to {}'.format(json_filename))
