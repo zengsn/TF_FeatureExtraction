@@ -86,11 +86,15 @@ class FeatureExtractor(object):
         # Note: endpoints is a dictionary with endpoints[name] = tf.Tensor
         self._logits, self._endpoints = self._network_fn(self._image_batch)
 
+        # saver
+        #saver = tf.train.Saver()
+
         # Find the checkpoint file
         checkpoint_path = self._checkpoint_path
         if tf.gfile.IsDirectory(self._checkpoint_path):
           checkpoint_path = tf.train.latest_checkpoint(self._checkpoint_path)
 
+        print(checkpoint_path)
         # Load pre-trained weights into the model
         variables_to_restore = slim.get_variables_to_restore()
         restore_fn = slim.assign_from_checkpoint_fn(
@@ -98,7 +102,12 @@ class FeatureExtractor(object):
 
         # Start the session and load the pre-trained weights
         self._sess = tf.Session()
-        restore_fn(self._sess)
+        if tf.gfile.IsDirectory(self._checkpoint_path):
+            saver = tf.train.import_meta_graph(checkpoint_path+'.meta')
+            #saver.restore(self._sess,checkpoint_path+'.data-00000-of-00001')
+            saver.restore(self._sess,checkpoint_path)
+        else:
+            restore_fn(self._sess)
 
         # Local variables initializer, needed for queues etc.
         self._sess.run(tf.local_variables_initializer())
