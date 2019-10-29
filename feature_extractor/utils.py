@@ -23,8 +23,8 @@ import matplotlib.pyplot as plt
 from datasets import imagenet
 
 # ImageNet mapping class_index => class_name
-imagenet_classnames = imagenet.create_readable_names_for_imagenet_labels()
-print(imagenet_classnames)
+#imagenet_classnames = imagenet.create_readable_names_for_imagenet_labels()
+#print(imagenet_classnames)
 
 def find_files(paths, extensions, sort=True):
     '''
@@ -93,6 +93,7 @@ def write_hdf5(filename, layer_names, feature_dataset):
             hf.create_dataset(layer_name, data=feature_dataset[layer_name], dtype=np.float32)
 
 def display_imagenet_prediction(image, class_index):
+    imagenet_classnames = imagenet.create_readable_names_for_imagenet_labels()
     class_label = imagenet_classnames[class_index]
     print("Prediction: {} (class_index={})".format(class_label, class_index))
     plt.figure()
