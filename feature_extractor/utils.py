@@ -24,7 +24,7 @@ from datasets import imagenet
 
 # ImageNet mapping class_index => class_name
 imagenet_classnames = imagenet.create_readable_names_for_imagenet_labels()
-
+print(imagenet_classnames)
 
 def find_files(paths, extensions, sort=True):
     '''
